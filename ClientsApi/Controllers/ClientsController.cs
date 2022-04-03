@@ -48,6 +48,8 @@ namespace ClientsApi.Controllers
                 // utiliza a query criada
                 clients = await _context.Clients
                         .Where(c => c.Id > parsedPageNumber * 10)
+                        .Include(c => c.Addresses)
+                        .Include(c => c.Cellphones)
                         .Take(10)
                         .OrderBy(c => c.Id)
                         .ToListAsync();
@@ -64,6 +66,8 @@ namespace ClientsApi.Controllers
             {
                 clients = await _context.Clients
                         .Where(c => c.Name == Request.Query["name"].ToString())
+                        .Include(c => c.Addresses)
+                        .Include(c => c.Cellphones)
                         .Take(10)
                         .OrderBy(c => c.Id)
                         .ToListAsync();
@@ -77,6 +81,8 @@ namespace ClientsApi.Controllers
             else 
             {
                 clients = await _context.Clients
+                    .Include(c => c.Addresses)
+                    .Include(c => c.Cellphones)
                     .Take(10)
                     .OrderBy(c => c.Id)
                     .ToListAsync();
@@ -95,7 +101,11 @@ namespace ClientsApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Client>> GetClient(long id)
         {
-            var client = await _context.Clients.FindAsync(id);
+            var client = await _context.Clients
+                            .Include(c => c.Addresses)
+                            .Include(c => c.Cellphones)
+                            .Where(c => c.Id == id)
+                            .FirstAsync();
 
             if (client == null)
             {

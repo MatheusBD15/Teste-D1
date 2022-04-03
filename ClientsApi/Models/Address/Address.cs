@@ -23,8 +23,5 @@ namespace ClientsApi.Models
 
         [Required]
         public long ClientId { get; set; }
-
-        [Required]
-        public Client? Client { get; set; }
     }
 }
