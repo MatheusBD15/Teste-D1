@@ -22,9 +22,74 @@ namespace ClientsApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Client>>> GetTodoItems()
+        public async Task<ActionResult<GetClientsDto>> GetClients()
         {
-            return await _context.Clients.ToListAsync();
+            List<Client> clients;
+
+            // pagina atual é 1 por padrão. Pode ser mudada conforme a query
+            int currentPage = 1;
+
+            var queryKeys = Request.Query.Keys;
+
+            // pega por paginação
+            if (queryKeys.Contains("page"))
+            {
+                var pageQuery = Request.Query["page"];
+
+                // tenta converter a query para um valor numérico. Se não funciona, retorna 404
+                int parsedPageNumber = 0;
+                var queryIsParsed = int.TryParse(pageQuery.First(), out parsedPageNumber);
+
+                if (!queryIsParsed)
+                {
+                    return BadRequest();
+                }
+
+                // utiliza a query criada
+                clients = await _context.Clients
+                        .Where(c => c.Id > parsedPageNumber * 10)
+                        .Take(10)
+                        .OrderBy(c => c.Id)
+                        .ToListAsync();
+                
+                if (clients.Count() == 0)
+                {
+                    return NotFound();
+                }
+
+                currentPage = parsedPageNumber;
+            }
+
+            else if (queryKeys.Contains("name"))
+            {
+                clients = await _context.Clients
+                        .Where(c => c.Name == Request.Query["name"].ToString())
+                        .Take(10)
+                        .OrderBy(c => c.Id)
+                        .ToListAsync();
+                
+                if (clients.Count() == 0)
+                {
+                    return NotFound();
+                }
+            }
+
+            else 
+            {
+                clients = await _context.Clients
+                    .Take(10)
+                    .OrderBy(c => c.Id)
+                    .ToListAsync();
+            }
+
+            // dividindo por 10, por ter 10 itens por página
+            var pageNumber = Math.Ceiling(_context.Clients.Count<Client>() / 10.0);
+
+            return new GetClientsDto(){
+                Clients = clients,
+                PageNumber = (int)pageNumber,
+                CurrentPage = currentPage
+            }; 
         }
 
         [HttpGet("{id}")]
