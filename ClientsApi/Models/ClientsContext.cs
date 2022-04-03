@@ -10,7 +10,8 @@ namespace ClientsApi.Models
         }
 
         public DbSet<Client> Clients { get; set; } = null!;
-
-
+        public DbSet<Cellphone> Cellphones { get; set; } = null!;
+        public DbSet<Address> Addresses { get; set; } = null!;
+        
     }
 }
