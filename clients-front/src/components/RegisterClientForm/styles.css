@@ -8,6 +8,14 @@
   max-width: max-content;
 }
 
+.create-client-button {
+  margin-right: 50px;
+}
+
 .form-list-container {
   flex-grow: inherit;
+}
+
+.alert-message {
+  margin-bottom: 30px;
 }

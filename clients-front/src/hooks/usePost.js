@@ -5,6 +5,7 @@ function usePost(url) {
 
   const [ response, setResponse ] = useState({
     error: null,
+    response: null
   })
 
 
@@ -17,8 +18,14 @@ function usePost(url) {
       method: "POST",
       body: JSON.stringify(params)
     })
-      .then((response) => console.log(response))
-      .catch((err) => console.log(err))
+      .then((response) => setResponse({
+        error: null,
+        response: response
+      }))
+      .catch((err) => setResponse({
+        error: response.error,
+        respponse: response
+      }))
   }
 
   return { response: response, post: onPost };
