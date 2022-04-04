@@ -89,12 +89,11 @@ namespace ClientsApi.Controllers
             }
 
             // dividindo por 10, por ter 10 itens por página
-            var pageNumber = Math.Ceiling(_context.Clients.Count<Client>() / 10.0);
+            var totalItems = _context.Clients.Count<Client>();
 
             return new GetClientsDto(){
                 Clients = clients,
-                PageNumber = (int)pageNumber,
-                CurrentPage = currentPage
+                TotalItems = totalItems
             }; 
         }
 

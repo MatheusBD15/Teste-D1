@@ -4,7 +4,6 @@ namespace ClientsApi.Models
     {
         public List<Client>? Clients { get; set; }
 
-        public int CurrentPage { get; set; }
-        public int PageNumber { get; set; }
+        public int TotalItems { get; set; }
     }
 }
