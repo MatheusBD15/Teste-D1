@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"
 import useDelete from "../../hooks/useDelete";
 import useFetch from "../../hooks/useFetch";
+import CellphonesTable from "../CellphonesTable";
+import AddressesTable from "../AddressesTable";
 import SearchBox from "../SearchBox";
 import "./styles.css"
 
@@ -36,6 +38,23 @@ function ClientsTable() {
     setSelectedName(value);
   }
 
+  const expandedRowRender = (record) => {
+    const addresses = record.addresses;
+    const cellphones = record.cellphones;
+
+    return (
+      <div className="row-details">
+        <h3>Telefones</h3>
+        <CellphonesTable cellphones={cellphones} />
+
+        <h3>Endereços</h3>
+        <AddressesTable 
+          addresses={addresses} 
+        />
+
+      </div>
+    )
+  }
 
   const columns = [
     {
@@ -87,17 +106,17 @@ function ClientsTable() {
       title: 'Ações',
       dataIndex: 'actions',
       key: 'actions',
-      render: (text, _record) => (
+      render: (_text, record) => (
         <Space size="small">
-          <Button type="primary" onClick={() => callDelete("clients/" + text)}>
+          <Button type="primary" onClick={() => callDelete("clients/" + record.id)}>
             Deletar
           </Button>
-          <Button onClick={() => navigate("edit-client/" + text)}>
+          <Button onClick={() => navigate("edit-client/" + record.id)}>
             Editar
           </Button>
         </Space>
       )
-    }
+    },
   ];
 
   if (loading || error) return <></>
@@ -106,16 +125,12 @@ function ClientsTable() {
 
   clients.forEach((client) => {
     dataRows.push({
-      id: client.id,
-      name: client.name,
-      rg: client.rg,
-      cpf: client.cpf,
+      ...client,
       birthDate: new Date(client.birthDate)?.toLocaleDateString() ?? "Data inválida",
       linkedin: client.linkedin ?? "Não providenciado",
       twitter: client.twitter ?? "Não providenciado",
       facebook: client.facebook ?? "Não providenciado",
       instagram: client.instagram ?? "Não providenciado",
-      actions: client.id
     })
   })
 
@@ -141,6 +156,9 @@ function ClientsTable() {
         dataSource={dataRows}
         columns={columns}
         className='table'
+        scroll={{ x: 1000 }}
+        expandable={{ expandedRowRender }}
+        rowKey={(record) => record.id}
         pagination={
           {
             pageSize: 10,

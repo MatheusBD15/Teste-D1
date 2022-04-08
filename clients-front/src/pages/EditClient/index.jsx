@@ -5,11 +5,16 @@ import useFetch from "../../hooks/useFetch";
 import usePut from "../../hooks/usePut";
 import moment from "moment";
 import "./styles.css"
+import { useEffect } from "react";
 
 function EditClient() {
   const { id } = useParams();
   const { response, put } = usePut('clients/' + id);
-  const { data, loading, error } = useFetch("clients/" + id);
+  const { data, loading, error, fetch } = useFetch("clients/" + id);
+
+  useEffect(() => {
+    fetch();
+  }, [ response ])
 
   const onPut = (params) => {
     put({
