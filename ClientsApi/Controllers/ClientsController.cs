@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ClientsApi.Models;
+using X.PagedList;
 
 namespace ClientsApi.Controllers
 {
@@ -24,76 +25,37 @@ namespace ClientsApi.Controllers
         [HttpGet]
         public async Task<ActionResult<GetClientsDto>> GetClients()
         {
-            List<Client> clients;
+
+            var clients = from c in _context.Clients
+                            select c;
 
             // pagina atual é 1 por padrão. Pode ser mudada conforme a query
             int currentPage = 1;
 
             var queryKeys = Request.Query.Keys;
 
-            // pega por paginação
-            if (queryKeys.Contains("page"))
+            if (queryKeys.Contains("page")) 
             {
                 var pageQuery = Request.Query["page"];
 
-                // tenta converter a query para um valor numérico. Se não funciona, retorna 404
-                int parsedPageNumber = 0;
-                var queryIsParsed = int.TryParse(pageQuery.First(), out parsedPageNumber);
-
-                if (!queryIsParsed)
-                {
-                    return BadRequest();
-                }
-
-                // utiliza a query criada
-                clients = await _context.Clients
-                        .Where(c => c.Id > parsedPageNumber * 10)
-                        .Include(c => c.Addresses)
-                        .Include(c => c.Cellphones)
-                        .Take(10)
-                        .OrderBy(c => c.Id)
-                        .ToListAsync();
-                
-                if (clients.Count() == 0)
-                {
-                    return NotFound();
-                }
-
-                currentPage = parsedPageNumber;
+                int.TryParse(pageQuery.First(), out currentPage);
             }
 
-            else if (queryKeys.Contains("name"))
+            if (queryKeys.Contains("name"))
             {
-                clients = await _context.Clients
-                        .Where(c => c.Name == Request.Query["name"].ToString())
-                        .Include(c => c.Addresses)
-                        .Include(c => c.Cellphones)
-                        .Take(10)
-                        .OrderBy(c => c.Id)
-                        .ToListAsync();
-                
-                if (clients.Count() == 0)
-                {
-                    return NotFound();
-                }
+                var name = Request.Query["name"].ToString();
+                clients = clients
+                        .Where(c => c.Name.Contains(name));
             }
 
-            else 
-            {
-                clients = await _context.Clients
-                    .Include(c => c.Addresses)
-                    .Include(c => c.Cellphones)
-                    .Take(10)
-                    .OrderBy(c => c.Id)
-                    .ToListAsync();
-            }
-
-            // dividindo por 10, por ter 10 itens por página
-            var totalItems = _context.Clients.Count<Client>();
+            var result = await clients
+                .Include(c => c.Addresses)
+                .Include(c => c.Cellphones)
+                .ToPagedListAsync(currentPage, 10);
 
             return new GetClientsDto(){
-                Clients = clients,
-                TotalItems = totalItems
+                Clients = await result.ToListAsync(),
+                TotalItems = result.TotalItemCount
             }; 
         }
 

@@ -21,9 +21,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// desativei redirecionamento https para que não seja necessário configurar o certificado
+// app.UseHttpsRedirection();
 
 app.UseAuthorization();
+app.UseAuthentication();
 
 app.UseCors(builder => {
     builder.AllowAnyOrigin()
