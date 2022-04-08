@@ -65,8 +65,8 @@ function ClientsTable() {
   useEffect(() => {
     if (selectedName.length > 0) {
       setFetchParams(
-          "?name=" + selectedName + "&page=" + selectedPage
-        );
+        "?name=" + selectedName + "&page=" + selectedPage
+      );
     } else {
       setFetchParams("?page=" + selectedPage);
     }
@@ -95,7 +95,7 @@ function ClientsTable() {
   })
 
   return (
-    <div className="table-container">
+    <>
       <div className='heading-container'>
         <h2>Listagem de CLientes</h2>
         <SearchBox
@@ -118,7 +118,8 @@ function ClientsTable() {
           }
         }
       />
-    </div>
+    </>
+
   )
 
 }
