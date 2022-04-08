@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Sidebar from './components/Sidebar/index';
 import Topbar from './components/TopBar';
 import Clients from './pages/Clients';
+import EditClient from './pages/EditClient';
 import RegisterClient from './pages/RegisterClient';
 
 function AppRouter() {
@@ -30,6 +31,7 @@ function AppRouter() {
             >
               <Routes>
                 <Route path="/register-client" element={<RegisterClient />} />
+                <Route path="/edit-client/:id" element={<EditClient />} />
                 <Route path="/" element={<Clients />} />
               </Routes>
 

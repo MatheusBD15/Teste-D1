@@ -10,6 +10,10 @@ function useFetch(params) {
   })
 
   useEffect(() => {
+    onFetch();
+  }, [params]);
+
+  const onFetch = () => {
     fetch(baseUrl + params)
       .then((response) => response.json())
       .then((response) => {
@@ -26,9 +30,9 @@ function useFetch(params) {
           error: err
         })
       })
-  }, [params]);
+  }
 
-  return response;
+  return { ...response, fetch: onFetch };
 }
 
 export default useFetch;

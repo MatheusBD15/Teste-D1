@@ -1,6 +1,7 @@
 import { Table } from "antd";
 import { useEffect, useState } from "react";
 import useFetch from "../../hooks/useFetch";
+import SearchBox from "../SearchBox";
 import "./styles.css"
 
 const columns = [
@@ -28,20 +29,52 @@ const columns = [
     title: 'Data de Nascimento',
     dataIndex: 'birthDate',
     key: 'birthDate',
+  },
+  {
+    title: 'Linkedin',
+    dataIndex: 'linkedin',
+    key: 'linkedin',
+  },
+  {
+    title: 'Facebook',
+    dataIndex: 'facebook',
+    key: 'facebook',
+  },
+  {
+    title: 'Twitter',
+    dataIndex: 'twitter',
+    key: 'twitter',
+  },
+  {
+    title: 'Instagram',
+    dataIndex: 'instagram',
+    key: 'instagram',
   }
 ];
 
 function ClientsTable() {
-    
+
   const dataRows = [];
 
-  const [ fetchParams, setFetchParams ] = useState("")
+  const [fetchParams, setFetchParams] = useState("")
   const { data, loading, error } = useFetch("clients" + fetchParams);
-  const [ selectedPage, setSelectedPage ] = useState(0);
+  const [selectedPage, setSelectedPage] = useState(1);
+  const [selectedName, setSelectedName] = useState('');
 
+  // Checagem de nome selecionado serve para botar nome nos params da query
   useEffect(() => {
-    setFetchParams("?page=" + selectedPage);
-  }, [selectedPage])
+    if (selectedName.length > 0) {
+      setFetchParams(
+          "?name=" + selectedName + "&page=" + selectedPage
+        );
+    } else {
+      setFetchParams("?page=" + selectedPage);
+    }
+  }, [selectedPage, selectedName])
+
+  const onSearch = (value) => {
+    setSelectedName(value);
+  }
 
   if (loading || error) return <></>
 
@@ -53,26 +86,35 @@ function ClientsTable() {
       name: client.name,
       rg: client.rg,
       cpf: client.cpf,
-      birthDate: client.birthDate
+      birthDate: new Date(client.birthDate)?.toLocaleDateString() ?? "Data inválida",
+      linkedin: client.linkedin ?? "Não providenciado",
+      twitter: client.twitter ?? "Não providenciado",
+      facebook: client.facebook ?? "Não providenciado",
+      instagram: client.instagram ?? "Não providenciado",
     })
   })
 
   return (
-    <div className="tableContainer">
-      <h2>Listagem de CLientes</h2>
+    <div className="table-container">
+      <div className='heading-container'>
+        <h2>Listagem de CLientes</h2>
+        <SearchBox
+          onSearch={onSearch}
+        />
+      </div>
       <Table
         size="middle"
         dataSource={dataRows}
         columns={columns}
-        style={{ marginTop: '20px', minWidth: '0' }}
-        pagination = {
+        className='table'
+        pagination={
           {
             pageSize: 10,
             onChange: (page) => {
-              setSelectedPage(page - 1);
+              setSelectedPage(page);
             },
             total: data.totalItems,
-            current: selectedPage + 1
+            current: selectedPage
           }
         }
       />
