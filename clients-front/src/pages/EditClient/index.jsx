@@ -9,7 +9,7 @@ import "./styles.css"
 function EditClient() {
   const { id } = useParams();
   const { response, put } = usePut('clients/' + id);
-  const { data, loading, error, fetch } = useFetch("clients/" + id);
+  const { data, loading, error } = useFetch("clients/" + id);
 
   const onPut = (params) => {
     put({
