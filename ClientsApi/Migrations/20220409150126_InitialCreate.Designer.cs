@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClientsApi.Migrations
 {
     [DbContext(typeof(ClientsContext))]
-    [Migration("20220403043201_InitialCreate")]
+    [Migration("20220409150126_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -131,24 +131,20 @@ namespace ClientsApi.Migrations
 
             modelBuilder.Entity("ClientsApi.Models.Address", b =>
                 {
-                    b.HasOne("ClientsApi.Models.Client", "Client")
+                    b.HasOne("ClientsApi.Models.Client", null)
                         .WithMany("Addresses")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Client");
                 });
 
             modelBuilder.Entity("ClientsApi.Models.Cellphone", b =>
                 {
-                    b.HasOne("ClientsApi.Models.Client", "Client")
+                    b.HasOne("ClientsApi.Models.Client", null)
                         .WithMany("Cellphones")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Client");
                 });
 
             modelBuilder.Entity("ClientsApi.Models.Client", b =>
