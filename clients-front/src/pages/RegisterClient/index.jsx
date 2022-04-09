@@ -20,7 +20,10 @@ function RegisterClient() {
 
       <h2>Registrar cliente</h2>
 
-      <ClientForm onSubmit={post} />
+      <ClientForm 
+        onSubmit={post} 
+        submitText="Criar Cliente"
+      />
     </div>
   )
 }

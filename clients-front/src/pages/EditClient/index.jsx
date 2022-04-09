@@ -47,6 +47,7 @@ function EditClient() {
       <ClientForm 
         onSubmit={onPut} 
         initialValues={data}
+        submitText="Editar Cliente"
       />
     </div>
   )

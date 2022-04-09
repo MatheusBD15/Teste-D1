@@ -7,13 +7,16 @@ const layout = {
   wrapperCol: { span: 20 },
 };
 
-function ClientForm({ onSubmit, initialValues }) {
+function ClientForm({ onSubmit, initialValues, submitText }) {
   const [form] = Form.useForm();
 
   const onFinish = (values) => {
-    console.log(values);
-    onSubmit(values);
-    form.resetFields();
+    if (!values.addresses || !values.cellphones) {
+      alert("Insira no mínimo um telefone e um endereço");
+    } else {
+      onSubmit(values);
+      form.resetFields();
+    }
   };
 
   const onReset = () => {
@@ -22,11 +25,11 @@ function ClientForm({ onSubmit, initialValues }) {
 
   return (
     <>
-      <Form {...layout} 
-            form={form} 
-            name="control-hooks" 
-            onFinish={onFinish}
-            initialValues={initialValues}
+      <Form {...layout}
+        form={form}
+        name="control-hooks"
+        onFinish={onFinish}
+        initialValues={initialValues}
       >
         <div className="forms-container">
           <div>
@@ -35,19 +38,20 @@ function ClientForm({ onSubmit, initialValues }) {
               rules={[
                 {
                   required: true,
+                  message: "Insira seu nome"
                 },
               ]}
             >
-              <Input 
+              <Input
                 placeholder='Nome'
-                allowClear
-                />
+              />
             </Form.Item>
             <Form.Item
               name="birthDate"
               rules={[
                 {
                   required: true,
+                  message: "Insira sua data de nascimento"
                 },
               ]}
             >
@@ -58,60 +62,74 @@ function ClientForm({ onSubmit, initialValues }) {
               rules={[
                 {
                   required: true,
+                  message: "Insira seu cpf"
                 },
+                {
+                  pattern: /(^\d{3}\.?\d{3}\.?\d{3}\-?\d{2}$)/,
+                  message: "Insira um cpf válido"
+                }
               ]}
             >
-              <Input placeholder='Cpf' allowClear/>
+              <Input placeholder='Cpf' />
             </Form.Item>
             <Form.Item
               name="rg"
               rules={[
                 {
                   required: true,
+                  message: "Insira seu rg"
                 },
+                {
+                  pattern: /(^\d{1,2}).?(\d{3}).?(\d{3})-?(\d{1}|X|x$)/,
+                  message: "Insira um rg válido"
+                }
               ]}
             >
-              <Input placeholder='Rg' allowClear/>
+              <Input placeholder='Rg' />
             </Form.Item>
             <Form.Item
               name="linkedin"
               rules={[
                 {
                   required: true,
+                  message: "Insira seu perfil do linkedin"
                 },
               ]}
             >
-              <Input placeholder='Linkedin' allowClear/>
+              <Input placeholder='Linkedin' />
             </Form.Item>
             <Form.Item
               name="facebook"
               rules={[
                 {
                   required: true,
+                  message: "Insira seu perfil do facebook"
                 },
               ]}
             >
-              <Input placeholder='Twitter' allowClear/>
+              <Input placeholder='Twitter' />
             </Form.Item>
             <Form.Item
               name="twitter"
               rules={[
                 {
                   required: true,
+                  message: "Insira seu perfil do twitter"
                 },
               ]}
             >
-              <Input placeholder='Twitter' allowClear/>
+              <Input placeholder='Twitter' />
             </Form.Item>
             <Form.Item
               name="instagram"
               rules={[
                 {
                   required: true,
+                  message: "Insira seu perfil do instagram"
                 },
               ]}
             >
-              <Input placeholder='Instagram' allowClear/>
+              <Input placeholder='Instagram' />
             </Form.Item>
 
           </div>
@@ -124,46 +142,72 @@ function ClientForm({ onSubmit, initialValues }) {
                       <Form.Item
                         {...restField}
                         name={[name, 'country']}
-                        rules={[{ required: true }]}
+                        rules={[{
+                          required: true,
+                          message: "Insira um país"
+                        }]}
                       >
-                        <Input placeholder="País" allowClear/>
+                        <Input placeholder="País" />
                       </Form.Item>
                       <Form.Item
                         {...restField}
                         name={[name, 'state']}
-                        rules={[{ required: true }]}
+                        rules={[{
+                          required: true,
+                          message: "Insira um estado"
+                        }]}
                       >
-                        <Input placeholder="Estado" allowClear/>
+                        <Input placeholder="Estado" />
                       </Form.Item>
                       <Form.Item
                         {...restField}
                         name={[name, 'postalCode']}
-                        rules={[{ required: true }]}
+                        rules={[{
+                          required: true,
+                          message: "Insira um CEP"
+                        },
+                        {
+                          pattern: /(^[0-9]{5})-?([0-9]{3}$)/,
+                          message: "Insira um CEP válido"
+                        }
+                        ]}
                       >
-                        <Input placeholder="CEP" allowClear/>
+                        <Input placeholder="CEP" />
                       </Form.Item>
                       <Form.Item
                         {...restField}
                         name={[name, 'neighbourhood']}
-                        rules={[{ required: true }]}
+                        rules={[
+                          {
+                            required: true,
+                            message: "Insira um bairro"
+                          }
+                        ]}
                       >
-                        <Input placeholder="Bairro" allowClear/>
+                        <Input placeholder="Bairro" />
                       </Form.Item>
                       <Form.Item
                         {...restField}
                         name={[name, 'street']}
-                        rules={[{ required: true }]}
+                        rules={[
+                          {
+                            required: true,
+                            message: "Insira uma rua"
+                          }
+                        ]}
                       >
-                        <Input placeholder="Rua" allowClear/>
+                        <Input placeholder="Rua" />
                       </Form.Item>
                       {(name > 0) ? <MinusCircleOutlined onClick={() => remove(name)} /> : <> </>}
                     </Space>
                   ))}
-                  <Form.Item>
-                    <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />} className="add-item-button">
-                      Adicionar endereço
-                    </Button>
-                  </Form.Item>
+                  {fields.length < 4 ? (
+                    <Form.Item>
+                      <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />} className="add-item-button">
+                        Adicionar Endereço
+                      </Button>
+                    </Form.Item>
+                  ) : null}
                 </>
               )}
             </Form.List>
@@ -175,29 +219,43 @@ function ClientForm({ onSubmit, initialValues }) {
                       <Form.Item
                         {...restField}
                         name={[name, 'number']}
-                        rules={[{ required: true }]}
+                        rules={[
+                          {
+                            required: true,
+                            message: "Insira seu número de telefone"
+                          },
+                          {
+                            pattern: /(^[0-9]{2})?(\s|-)?(9?[0-9]{4})-?([0-9]{4}$)/,
+                            message: "Insira um número de telefone válido"
+                          }
+                        ]}
                       >
-                        <Input placeholder="Número" allowClear/>
+                        <Input placeholder="Número" allowClear />
                       </Form.Item>
                       <Form.Item
                         {...restField}
                         name={[name, 'identification']}
-                        rules={[{ required: true }]}
+                        rules={[{
+                          required: true,
+                          message: "Informe o tipo do telefone"
+                        }]}
                       >
                         <Select style={{ minWidth: "130px" }} placeholder="identificação">
-                          <Select.Option value="residential">residencial</Select.Option>
-                          <Select.Option value="comercial">comercial</Select.Option>
+                          <Select.Option value="residencial">Residencial</Select.Option>
+                          <Select.Option value="comercial">Comercial</Select.Option>
                         </Select>
 
                       </Form.Item>
                       {(name > 0) ? <MinusCircleOutlined onClick={() => remove(name)} /> : <> </>}
                     </Space>
                   ))}
-                  <Form.Item>
-                    <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />} className="add-item-button">
-                      Adicionar Telefone
-                    </Button>
-                  </Form.Item>
+                  {fields.length < 4 ? (
+                    <Form.Item>
+                      <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />} className="add-item-button">
+                        Adicionar Telefone
+                      </Button>
+                    </Form.Item>
+                  ) : null}
                 </>
               )}
             </Form.List>
@@ -208,7 +266,7 @@ function ClientForm({ onSubmit, initialValues }) {
 
         <Form.Item>
           <Button type="primary" htmlType="submit" className='create-client-button'>
-            Criar Cliente
+            {submitText}
           </Button>
           <Button htmlType="button" onClick={onReset}>
             Resetar Campos
