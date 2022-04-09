@@ -107,7 +107,7 @@ function ClientForm({ onSubmit, initialValues, submitText }) {
                 },
               ]}
             >
-              <Input placeholder='Twitter' />
+              <Input placeholder='Facebook' />
             </Form.Item>
             <Form.Item
               name="twitter"

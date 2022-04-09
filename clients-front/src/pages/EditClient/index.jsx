@@ -33,10 +33,19 @@ function EditClient() {
   return (
     <div className="contentContainer">
       
-      {!response.error && response.response ? (
+      {!response.error && response.response?.status == "204"  ? (
         <Alert
           message="Cliente editado com sucesso"
           type="success"
+          closable
+          className='alert-message'
+        />
+      ) : null}
+
+        {response.response && response.response?.status != "204" ? (
+        <Alert
+          message="Erro ao editar cliente"
+          type="error"
           closable
           className='alert-message'
         />
