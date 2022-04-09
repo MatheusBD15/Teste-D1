@@ -13,6 +13,7 @@ namespace ClientsApi.Models
         public string? State { get; set; }
 
         [Required]
+        [RegularExpression(@"(^[0-9]{5})-?([0-9]{3}$)")]
         public string? PostalCode { get; set; }
 
         [Required]

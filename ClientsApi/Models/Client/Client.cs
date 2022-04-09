@@ -10,9 +10,11 @@ namespace ClientsApi.Models
         public string? Name { get; set; }
 
         [Required]
+        [RegularExpression(@"(^\d{3}\.?\d{3}\.?\d{3}\-?\d{2}$)")]
         public string? Cpf { get; set; }
 
         [Required]
+        [RegularExpression(@"(^\d{1,2}).?(\d{3}).?(\d{3})-?(\d{1}|X|x$)")]
         public string? Rg { get; set; }
 
         [Required]

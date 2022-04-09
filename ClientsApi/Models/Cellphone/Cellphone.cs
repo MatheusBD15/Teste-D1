@@ -7,6 +7,7 @@ namespace ClientsApi.Models
         public long Id { get; set; }
 
         [Required]
+        [RegularExpression(@"(^[0-9]{2})?(\s|-)?(9?[0-9]{4})-?([0-9]{4}$)")]
         public string? Number { get; set; }
 
         [Required]

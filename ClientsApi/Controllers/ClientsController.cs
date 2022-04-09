@@ -84,7 +84,7 @@ namespace ClientsApi.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(client).State = EntityState.Modified;
+            _context.Clients.Update(client);
 
             try
             {
